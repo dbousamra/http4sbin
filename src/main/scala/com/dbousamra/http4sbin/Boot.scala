@@ -8,6 +8,8 @@ import org.http4s.server.blaze.BlazeBuilder
 import org.http4s.server.syntax._
 import org.log4s._
 
+import scala.util.Try
+
 object Boot extends ServerApp {
 
   val logger = getLogger
@@ -30,7 +32,7 @@ object Boot extends ServerApp {
     .foldLeft(rootEndpoint.service)((i, e) => i orElse e.service)
 
   def server(args: List[String]) = BlazeBuilder
-    .bindHttp(8080, "0.0.0.0")
+    .bindHttp(Try(System.getenv("PORT").toInt).toOption.getOrElse(8080), "0.0.0.0")
     .mountService(composedService, "/")
     .start
 }
