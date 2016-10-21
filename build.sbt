@@ -12,6 +12,8 @@ lazy val http4sVersion = "0.14.10"
 
 lazy val scalazVersion = "7.1.7"
 
+mainClass := Some("com.dbousamra.http4sbin.http.Boot")
+
 libraryDependencies ++= Seq(
   "org.log4s"      %% "log4s"               % "1.3.2",
   "org.slf4j"      %  "slf4j-log4j12"       % "1.7.12",
