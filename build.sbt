@@ -1,6 +1,6 @@
 import sbt.Keys._
 
-name := "http4s"
+name := "http4sbin"
 
 version := "0.0.1"
 
@@ -27,3 +27,5 @@ libraryDependencies ++= Seq(
   "org.scalatest"  %% "scalatest"           % "3.0.0"  % "test" withSources() withJavadoc(),
   "org.scalacheck" %% "scalacheck"          % "1.13.3" % "test" withSources() withJavadoc()
 )
+
+enablePlugins(JavaAppPackaging)
