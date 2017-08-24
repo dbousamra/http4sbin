@@ -1,12 +1,13 @@
 package com.dbousamra.http4sbin.http.endpoints
 
-import argonaut._, Argonaut._
+import cats.effect.IO
 import com.dbousamra.http4sbin.http._
+import io.circe.syntax._
 import org.http4s._
+import org.http4s.circe._
 import org.http4s.dsl._
-import org.http4s.argonaut._
 
-object HeadersEndpoint extends Endpoint {
+object HeadersEndpoint extends Endpoint[IO] {
 
   val description: EndpointDescriptor =
     EndpointDescriptor(
@@ -15,10 +16,8 @@ object HeadersEndpoint extends Endpoint {
       description = "Returns the headers you sent"
     )
 
-  val service: HttpService = HttpService {
-    case req @ _ -> Root / "headers" =>{
-      val json = req.headers.foldLeft(jEmptyObject)((i, h) => i.->:(h.name.value := h.value))
-      Ok(json)
-    }
+  val service: HttpService[IO] = HttpService[IO] {
+    case req @ _ -> Root / "headers" =>
+      Ok(req.headers.toList.map(h => h.name.value -> h.value).toMap.asJson)
   }
 }

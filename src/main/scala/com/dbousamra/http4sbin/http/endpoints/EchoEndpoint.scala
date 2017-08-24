@@ -1,15 +1,11 @@
 package com.dbousamra.http4sbin.http.endpoints
 
-import argonaut._
-import Argonaut._
+import cats.effect.IO
 import com.dbousamra.http4sbin.http._
 import org.http4s._
 import org.http4s.dsl._
-import org.http4s.argonaut._
 
-import scalaz.concurrent.Task
-
-object EchoEndpoint extends Endpoint {
+object EchoEndpoint extends Endpoint[IO] {
 
   val description: EndpointDescriptor =
     EndpointDescriptor(
@@ -18,8 +14,8 @@ object EchoEndpoint extends Endpoint {
       description = "Echos back your request, as a response"
     )
 
-  val service: HttpService = HttpService {
+  val service: HttpService[IO] = HttpService[IO] {
     case req @ _ -> Root / "echo" =>
-      Task.now(Response(Status.Ok, req.httpVersion, req.headers, body = req.body, req.attributes))
+      IO.pure(Response(Status.Ok, req.httpVersion, req.headers, body = req.body, req.attributes))
   }
 }
