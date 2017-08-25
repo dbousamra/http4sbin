@@ -1,13 +1,13 @@
 package com.dbousamra.http4sbin.http.endpoints
 
-import cats.effect.IO
+import cats.Monad
 import com.dbousamra.http4sbin.http._
-import org.http4s.{HttpService, MediaType}
 import org.http4s.dsl._
+import org.http4s.{HttpService, MediaType}
 
 import scalatags.Text.all._
 
-case class RootEndpoint(endpoints: List[EndpointDescriptor]) extends Endpoint[IO] {
+case class RootEndpoint[F[+_]: Monad](endpoints: List[EndpointDescriptor]) extends Endpoint[F] {
   val description: EndpointDescriptor =
     EndpointDescriptor(
       path = "/",
@@ -35,7 +35,7 @@ case class RootEndpoint(endpoints: List[EndpointDescriptor]) extends Endpoint[IO
     )
   )
 
-  val service: HttpService[IO] = HttpService[IO] {
+  val service: HttpService[F] = HttpService[F] {
     case GET -> Root =>
       Ok(l.render).withType(MediaType.`text/html`)
   }

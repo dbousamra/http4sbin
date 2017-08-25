@@ -1,6 +1,6 @@
 package com.dbousamra.http4sbin.http.endpoints
 
-import cats.effect.IO
+import cats.effect.Async
 import com.dbousamra.http4sbin.http._
 import com.dbousamra.http4sbin.http.endpoints.Helpers._
 import fs2.Scheduler
@@ -11,8 +11,10 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.util.Random
 
-class RandomDelayEndpoint(implicit executionContext: ExecutionContext, scheduler: Scheduler)
-    extends Endpoint[IO] {
+class RandomDelayEndpoint[F[_]: Async](
+    implicit executionContext: ExecutionContext,
+    scheduler: Scheduler
+) extends Endpoint[F] {
 
   val description: EndpointDescriptor =
     EndpointDescriptor(
@@ -22,7 +24,7 @@ class RandomDelayEndpoint(implicit executionContext: ExecutionContext, scheduler
         "Delays responding for a random amount of time, between 0 and n seconds. (max 30 seconds)"
     )
 
-  val service: HttpService[IO] = HttpService[IO] {
+  val service: HttpService[F] = HttpService[F] {
     case _ -> Root / "delay" / "random" / DelayTimeParamMatcher(n) =>
       scheduler.effect.delay(Ok(), Random.nextInt(n + 1).seconds)
   }

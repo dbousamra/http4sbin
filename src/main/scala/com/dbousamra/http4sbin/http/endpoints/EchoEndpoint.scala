@@ -1,11 +1,11 @@
 package com.dbousamra.http4sbin.http.endpoints
 
-import cats.effect.IO
+import cats.Applicative
 import com.dbousamra.http4sbin.http._
 import org.http4s._
 import org.http4s.dsl._
 
-object EchoEndpoint extends Endpoint[IO] {
+class EchoEndpoint[F[_]](implicit F: Applicative[F]) extends Endpoint[F] {
 
   val description: EndpointDescriptor =
     EndpointDescriptor(
@@ -14,8 +14,8 @@ object EchoEndpoint extends Endpoint[IO] {
       description = "Echos back your request, as a response"
     )
 
-  val service: HttpService[IO] = HttpService[IO] {
+  val service: HttpService[F] = HttpService[F] {
     case req @ _ -> Root / "echo" =>
-      IO.pure(Response(Status.Ok, req.httpVersion, req.headers, body = req.body, req.attributes))
+      F.pure(Response(Status.Ok, req.httpVersion, req.headers, body = req.body, req.attributes))
   }
 }
