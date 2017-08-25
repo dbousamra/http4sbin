@@ -1,6 +1,7 @@
 language: scala
 scala:
 - 2.12.3
+jdk: oraclejdk8
 deploy:
   provider: heroku
   api_key:

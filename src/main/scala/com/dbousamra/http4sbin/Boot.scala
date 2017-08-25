@@ -28,11 +28,11 @@ object Boot extends StreamApp[IO] {
       implicit scheduler =>
         val endpoints: List[Endpoint[IO]] =
           List(
-            OriginEndpoint,
-            EchoEndpoint,
-            HeadersEndpoint,
-            UserAgentEndpoint,
-            RandomBytesEndpoint,
+            new OriginEndpoint,
+            new EchoEndpoint,
+            new HeadersEndpoint,
+            new UserAgentEndpoint,
+            new RandomBytesEndpoint,
             new DelayEndpoint,
             new RandomDelayEndpoint
           )
